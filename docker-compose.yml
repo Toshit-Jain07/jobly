@@ -1,0 +1,20 @@
+# API + workers sharing one SQLite file through a volume (single host only).
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - jobly-data:/data
+
+  worker:
+    build: .
+    command: python -m worker --processes 3
+    depends_on:
+      - api
+    volumes:
+      - jobly-data:/data
+    stop_grace_period: 15s   # lets a worker finish its current job on shutdown
+
+volumes:
+  jobly-data:
