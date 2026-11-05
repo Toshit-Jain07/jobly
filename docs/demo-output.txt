@@ -1,0 +1,71 @@
+# Real output from: python -m worker --processes 3 --job-timeout 3 --backoff-base 1
+# against a target that returns 500 40% of the time and hangs 15% of the time.
+# (long error text trimmed to fit)
+
+23:56:05 worker-1 worker started
+23:56:05 worker-3 worker started
+23:56:05 worker-2 worker started
+23:56:07 worker-1 job 1 (webhook_delivery) attempt 1/4: succeeded in 62ms
+23:56:07 worker-1 job 4 (webhook_delivery) attempt 1/4: failed, retry in 0.5s (HTTP 500)
+23:56:07 worker-2 job 3 (webhook_delivery) attempt 1/4: succeeded in 100ms
+23:56:07 worker-3 job 2 (webhook_delivery) attempt 1/4: succeeded in 112ms
+23:56:07 worker-3 job 7 (webhook_delivery) attempt 1/4: succeeded in 22ms
+23:56:07 worker-1 job 5 (webhook_delivery) attempt 1/4: failed, retry in 0.7s (HTTP 500)
+23:56:07 worker-2 job 6 (webhook_delivery) attempt 1/4: failed, retry in 0.5s (HTTP 500)
+23:56:07 worker-3 job 8 (webhook_delivery) attempt 1/4: failed, retry in 0.7s (HTTP 500)
+23:56:07 worker-3 job 11 (webhook_delivery) attempt 1/4: succeeded in 24ms
+23:56:07 worker-3 job 12 (webhook_delivery) attempt 1/4: succeeded in 20ms
+23:56:07 worker-3 job 13 (webhook_delivery) attempt 1/4: succeeded in 20ms
+23:56:07 worker-3 job 14 (webhook_delivery) attempt 1/4: failed, retry in 0.9s (HTTP 500)
+23:56:10 worker-1 job 9 (webhook_delivery) attempt 1/4: failed, retry in 0.9s (JobTimeout: timed out after 3.0s)
+23:56:10 worker-2 job 10 (webhook_delivery) attempt 1/4: failed, retry in 0.8s (JobTimeout: timed out after 3.0s)
+23:56:10 worker-1 job 16 (webhook_delivery) attempt 1/4: succeeded in 23ms
+23:56:10 worker-1 job 18 (webhook_delivery) attempt 1/4: succeeded in 20ms
+23:56:10 worker-1 job 19 (webhook_delivery) attempt 1/4: failed, retry in 0.6s (HTTP 500)
+23:56:10 worker-1 job 20 (webhook_delivery) attempt 1/4: succeeded in 19ms
+23:56:10 worker-1 job 4 (webhook_delivery) attempt 2/4: failed, retry in 1.4s (HTTP 500)
+23:56:10 worker-3 job 15 (webhook_delivery) attempt 1/4: failed, retry in 0.6s (JobTimeout: timed out after 3.0s)
+23:56:10 worker-3 job 8 (webhook_delivery) attempt 2/4: succeeded in 23ms
+23:56:10 worker-3 job 5 (webhook_delivery) attempt 2/4: failed, retry in 1.9s (HTTP 500)
+23:56:10 worker-3 job 14 (webhook_delivery) attempt 2/4: succeeded in 20ms
+23:56:11 worker-3 job 15 (webhook_delivery) attempt 2/4: succeeded in 20ms
+23:56:11 worker-3 job 19 (webhook_delivery) attempt 2/4: succeeded in 19ms
+23:56:11 worker-3 job 10 (webhook_delivery) attempt 2/4: failed, retry in 1.4s (HTTP 500)
+23:56:13 worker-2 job 17 (webhook_delivery) attempt 1/4: failed, retry in 0.7s (JobTimeout: timed out after 3.0s)
+23:56:13 worker-2 job 4 (webhook_delivery) attempt 3/4: succeeded in 23ms
+23:56:13 worker-2 job 5 (webhook_delivery) attempt 3/4: succeeded in 21ms
+23:56:13 worker-2 job 10 (webhook_delivery) attempt 3/4: failed, retry in 3.2s (HTTP 500)
+23:56:13 worker-1 job 6 (webhook_delivery) attempt 2/4: failed, retry in 1.3s (JobTimeout: timed out after 3.0s)
+23:56:14 worker-2 job 17 (webhook_delivery) attempt 2/4: failed, retry in 2.0s (HTTP 500)
+23:56:14 worker-3 job 9 (webhook_delivery) attempt 2/4: failed, retry in 1.4s (JobTimeout: timed out after 3.0s)
+23:56:18 worker-2 job 6 (webhook_delivery) attempt 3/4: failed, retry in 3.0s (JobTimeout: timed out after 3.0s)
+23:56:18 worker-2 job 10 (webhook_delivery) attempt 4/4: succeeded in 22ms
+23:56:19 worker-3 job 9 (webhook_delivery) attempt 3/4: failed, retry in 2.8s (JobTimeout: timed out after 3.0s)
+23:56:19 worker-1 job 17 (webhook_delivery) attempt 3/4: failed, retry in 2.4s (JobTimeout: timed out after 3.0s)
+23:56:21 worker-1 job 6 (webhook_delivery) attempt 4/4: succeeded in 29ms
+23:56:22 worker-2 job 17 (webhook_delivery) attempt 4/4: out of attempts -> dead (HTTP 500)
+23:56:22 worker-1 job 9 (webhook_delivery) attempt 4/4: out of attempts -> dead (HTTP 500)
+23:56:26 worker-2 worker stopped
+23:56:26 worker-1 worker stopped
+23:56:26 worker-3 worker stopped
+
+# Client side: python scripts/demo.py
+submitted 20 jobs -> http://127.0.0.1:8000/_demo/flaky?fail=0.4&hang=0.15&hang_seconds=8
+
+queued=20 (ready 20, backing off 0)  running=0  succeeded= 0  dead=0
+queued=10 (ready 10, backing off 0)  running=3  succeeded= 7  dead=0
+queued= 6 (ready 0, backing off 6)  running=2  succeeded=12  dead=0
+queued= 3 (ready 2, backing off 1)  running=3  succeeded=14  dead=0
+queued= 4 (ready 1, backing off 3)  running=0  succeeded=16  dead=0
+queued= 1 (ready 1, backing off 0)  running=3  succeeded=16  dead=0
+queued= 1 (ready 0, backing off 1)  running=2  succeeded=17  dead=0
+queued= 3 (ready 0, backing off 3)  running=0  succeeded=17  dead=0
+queued= 0 (ready 0, backing off 0)  running=0  succeeded=18  dead=2
+
+final outcome
+  succeeded 18 jobs   attempts used: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4]
+  dead       2 jobs   attempts used: [4, 4]
+
+8 job(s) failed at least once and still succeeded thanks to retries.
+dead-lettered: job 9: HTTPStatusError: Server error '500 Internal Server Error'
+dead-lettered: job 17: HTTPStatusError: Server error '500 Internal Server Error'
